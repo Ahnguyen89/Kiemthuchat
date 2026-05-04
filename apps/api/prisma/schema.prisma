@@ -1,0 +1,252 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  password      String?
+  githubId      String?        @unique
+  avatar        String?
+  role          Role           @default(USER)
+  isEmailVerified Boolean      @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  apiKeys       ApiKey[]
+  flows         Flow[]
+  refreshTokens RefreshToken[]
+  settings      UserSettings?
+  emailVerifications EmailVerification[]
+  chatMembers        ChatMember[]
+  sentMessages       Message[]
+  messageStatuses    MessageStatus[]
+  flowVersions       FlowVersion[]
+  flowAuditLogs      FlowAuditLog[]
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model EmailVerification {
+  id        String   @id @default(cuid())
+  userId    String
+  code      String
+  email     String
+  isUsed    Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_verifications")
+}
+
+model ApiKey {
+  id         String   @id @default(cuid())
+  userId     String
+  provider   Provider
+  name       String
+  keyHash    String
+  keyPreview String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
+
+model UserSettings {
+  id                    String @id @default(cuid())
+  userId                String @unique
+  defaultModel          String @default("gpt-3.5-turbo")
+  maxConcurrentRequests Int    @default(3)
+  autoSaveInterval      Int    @default(30000)
+  theme                 String @default("system")
+  user                  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model Flow {
+  id              String          @id @default(cuid())
+  userId          String
+  name            String
+  description     String?
+  nodes           Json
+  edges           Json
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  isPublic        Boolean         @default(false)
+  shareToken      String?         @unique
+  sharePermission SharePermission @default(VIEW)
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions        FlowVersion[]
+  auditLogs       FlowAuditLog[]
+
+  @@map("flows")
+}
+
+model FlowVersion {
+  id            String        @id @default(cuid())
+  flowId        String
+  versionNumber Int
+  nodes         Json
+  edges         Json
+  createdBy     String
+  createdAt     DateTime      @default(now())
+  description   String?
+  isAutoSave    Boolean       @default(false)
+  
+  // Relations
+  flow          Flow          @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  creator       User          @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  auditLogs     FlowAuditLog[]
+
+  @@index([flowId, createdAt])
+  @@index([flowId, versionNumber])
+  @@map("flow_versions")
+}
+
+model FlowAuditLog {
+  id        String       @id @default(cuid())
+  flowId    String
+  userId    String
+  action    String
+  details   Json
+  timestamp DateTime     @default(now())
+  versionId String?
+  
+  // Relations
+  flow      Flow         @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  version   FlowVersion? @relation(fields: [versionId], references: [id], onDelete: SetNull)
+
+  @@index([flowId, timestamp])
+  @@index([userId, timestamp])
+  @@map("flow_audit_logs")
+}
+
+enum SharePermission {
+  VIEW
+  EDIT
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Provider {
+  OPENAI
+  ANTHROPIC
+  GOOGLE
+}
+// Chat Models
+model ChatRoom {
+  id          String       @id @default(cuid())
+  name        String?
+  type        ChatRoomType @default(DIRECT)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  // Relations
+  members     ChatMember[]
+  messages    Message[]
+
+  @@map("chat_rooms")
+}
+
+model ChatMember {
+  id            String    @id @default(cuid())
+  userId        String
+  chatRoomId    String
+  role          ChatRole  @default(MEMBER)
+  isOnline      Boolean   @default(false)
+  lastSeenAt    DateTime  @default(now())
+  joinedAt      DateTime  @default(now())
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatRoom      ChatRoom  @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chatRoomId])
+  @@map("chat_members")
+}
+
+model Message {
+  id            String          @id @default(cuid())
+  chatRoomId    String
+  senderId      String
+  content       String
+  type          MessageType     @default(TEXT)
+  fileUrl       String?
+  fileName      String?
+  fileSize      Int?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  isEdited      Boolean         @default(false)
+  isDeleted     Boolean         @default(false)
+  
+  // Relations
+  chatRoom      ChatRoom        @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  sender        User            @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  statuses      MessageStatus[]
+
+  @@map("messages")
+}
+
+model MessageStatus {
+  id          String              @id @default(cuid())
+  messageId   String
+  userId      String
+  status      MessageStatusType   @default(SENT)
+  timestamp   DateTime            @default(now())
+  
+  // Relations
+  message     Message             @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@map("message_statuses")
+}
+
+// Chat Enums
+enum ChatRoomType {
+  DIRECT
+  GROUP
+}
+
+enum ChatRole {
+  ADMIN
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  AUDIO
+  VIDEO
+}
+
+enum MessageStatusType {
+  SENT
+  DELIVERED
+  SEEN
+}
