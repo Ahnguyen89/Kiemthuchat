@@ -55,7 +55,7 @@ class ApiClient {
       const response = await fetch(url, config);
 
       // If unauthorized, try refresh once then retry original request
-      if (response.status === 401) {
+      if (response.status === 401 && !this.isAuthEndpoint(endpoint)) {
         const retried = await this.tryHandleUnauthorizedAndRetry<T>(endpoint, options);
         return retried;
       }
@@ -170,6 +170,10 @@ class ApiClient {
       throw new Error((retryData as any)?.message || 'Request failed');
     }
     return retryData as ApiResponse<T>;
+  }
+
+  private isAuthEndpoint(endpoint: string): boolean {
+    return endpoint.startsWith('/auth/');
   }
 
   // Auth endpoints
