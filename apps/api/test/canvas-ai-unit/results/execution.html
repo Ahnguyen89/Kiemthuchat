@@ -1,0 +1,34 @@
+<!doctype html><meta charset="utf-8"><title>Jest execution log</title><style>body{font:16px Arial;margin:28px}pre{font:14px Consolas;white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f6f8;padding:20px}</style><h1>Jest execution log — 18/11/2026</h1><p>Nguyên Đình Anh · SDK AI/Prisma mocked · Nội dung từ execution.log, không phải ảnh terminal</p><pre>[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/hoi-dap/controller.spec.ts (7.499 s)
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/genai/suggestions.controller.spec.ts
+FAIL Kiemthuchat/apps/api/test/canvas-ai-unit/genai/template.service.spec.ts
+  ● TemplateGeneratorService.generateTemplate › TC_GEN_016 ID node trùng
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      135 |       'user-key'
+      136 |     );
+    &gt; 137 |     expect(new Set(result.nodes.map((n) =&gt; n.id)).size).toBe(result.nodes.length);
+          |                                                         ^
+      138 |   });
+      139 | });
+      140 |
+
+      at Object.&lt;anonymous&gt; (test/canvas-ai-unit/genai/template.service.spec.ts:137:57)
+
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/tom-tat/controller.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/genai/template.controller.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/genai/suggestions.service.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/hoi-dap/service.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/tom-tat/service.spec.ts
+
+Test Suites: 1 failed, 7 passed, 8 total
+Tests:       1 failed, 63 passed, 64 total
+Snapshots:   0 total
+Time:        15.768 s
+Ran all test suites.
+Test results written to: Kiemthuchat\apps\api\test\canvas-ai-unit\results\jest-results.json
+</pre>

@@ -1,0 +1,13 @@
+[
+  {
+    "id": "TC_GEN_016",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "ID node trùng",
+    "input": "description='Kế hoạch workshop'; hai node có id='N01'; edges=[]",
+    "expected": "Kết quả bảo đảm ID node duy nhất",
+    "status": "Fail",
+    "failure": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 2\nReceived: 1\n    at Object.<anonymous> (D:\\Kiemthuchatluongpm\\Kiemthuchat\\apps\\api\\test\\canvas-ai-unit\\genai\\template.service.spec.ts:137:57)"
+  }
+]

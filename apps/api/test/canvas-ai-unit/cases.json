@@ -1,0 +1,578 @@
+[
+  {
+    "id": "TC_QA_001",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Xử lý yêu cầu hợp lệ",
+    "input": "userId='1001'; id='2001'; question='Workshop diễn ra ở đâu?'; key Google hợp lệ",
+    "expected": "Trả nội dung câu trả lời trong kết quả thành công"
+  },
+  {
+    "id": "TC_QA_002",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Canvas không tồn tại",
+    "input": "userId='1001'; id='9999'; question='Workshop diễn ra ở đâu?'",
+    "expected": "Báo không tìm thấy, không gọi AI"
+  },
+  {
+    "id": "TC_QA_003",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Không có quyền truy cập",
+    "input": "userId='1001'; id='2001'; question='Workshop diễn ra ở đâu?'; canvas riêng tư thuộc user khác",
+    "expected": "Từ chối truy cập, không gọi AI"
+  },
+  {
+    "id": "TC_QA_004",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Dùng key OpenAI cá nhân",
+    "input": "userId='1001'; id='2001'; question='Workshop diễn ra ở đâu?'; chỉ có key OpenAI active",
+    "expected": "Chuyển đúng key OpenAI đến service"
+  },
+  {
+    "id": "TC_QA_005",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Không có key cá nhân",
+    "input": "userId='1001'; id='2001'; question='Workshop diễn ra ở đâu?'; có key hệ thống",
+    "expected": "Chuyển yêu cầu để service dùng key hệ thống"
+  },
+  {
+    "id": "TC_QA_006",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Dịch vụ AI timeout",
+    "input": "userId='1001'; id='2001'; question='Workshop diễn ra ở đâu?'; AI timeout",
+    "expected": "Hàm thất bại, không báo thành công"
+  },
+  {
+    "id": "TC_QA_007",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Câu hỏi rỗng",
+    "input": "userId='1001'; id='2001'; question=\"\"",
+    "expected": "Từ chối yêu cầu thiếu câu hỏi"
+  },
+  {
+    "id": "TC_QA_008",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/controller.spec.ts",
+    "function": "FlowController.askQuestion",
+    "objective": "Thiếu câu hỏi",
+    "input": "userId='1001'; id='2001'; question=undefined",
+    "expected": "Từ chối yêu cầu thiếu câu hỏi"
+  },
+  {
+    "id": "TC_QA_009",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Nhận phản hồi OpenAI",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; provider='OPENAI'; key hợp lệ",
+    "expected": "Trả đầy đủ phản hồi và gửi đúng ngữ cảnh"
+  },
+  {
+    "id": "TC_QA_010",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Nhận phản hồi Google",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; provider='GOOGLE'; key hợp lệ",
+    "expected": "Trả đầy đủ phản hồi Google"
+  },
+  {
+    "id": "TC_QA_011",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Ưu tiên key cá nhân",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; có key cá nhân và hệ thống",
+    "expected": "Dùng key cá nhân"
+  },
+  {
+    "id": "TC_QA_012",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Dùng key hệ thống",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; chỉ có key hệ thống",
+    "expected": "Dùng key hệ thống, trả phản hồi"
+  },
+  {
+    "id": "TC_QA_013",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Thiếu toàn bộ key",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; không có key",
+    "expected": "Báo thiếu cấu hình API key"
+  },
+  {
+    "id": "TC_QA_014",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "API key sai",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; API key sai",
+    "expected": "Ném lỗi xử lý AI, không trả câu trả lời thành công"
+  },
+  {
+    "id": "TC_QA_015",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Provider timeout",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; Provider timeout",
+    "expected": "Ném lỗi xử lý AI, không trả câu trả lời thành công"
+  },
+  {
+    "id": "TC_QA_016",
+    "feature": "hoi-dap",
+    "file": "test/canvas-ai-unit/hoi-dap/service.spec.ts",
+    "function": "CanvasAnalysisService.answerQuestion",
+    "objective": "Mất kết nối provider",
+    "input": "nodes=canvas workshop; edges=[]; question='Workshop diễn ra ở đâu?'; Mất kết nối provider",
+    "expected": "Ném lỗi xử lý AI, không trả câu trả lời thành công"
+  },
+  {
+    "id": "TC_SUM_001",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Xử lý yêu cầu hợp lệ",
+    "input": "userId='1001'; id='2001'; key Google hợp lệ",
+    "expected": "Trả nội dung tóm tắt trong kết quả thành công"
+  },
+  {
+    "id": "TC_SUM_002",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Canvas không tồn tại",
+    "input": "userId='1001'; id='9999'",
+    "expected": "Báo không tìm thấy, không gọi AI"
+  },
+  {
+    "id": "TC_SUM_003",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Không có quyền truy cập",
+    "input": "userId='1001'; id='2001'; canvas riêng tư thuộc user khác",
+    "expected": "Từ chối truy cập, không gọi AI"
+  },
+  {
+    "id": "TC_SUM_004",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Dùng key OpenAI cá nhân",
+    "input": "userId='1001'; id='2001'; chỉ có key OpenAI active",
+    "expected": "Chuyển đúng key OpenAI đến service"
+  },
+  {
+    "id": "TC_SUM_005",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Không có key cá nhân",
+    "input": "userId='1001'; id='2001'; có key hệ thống",
+    "expected": "Chuyển yêu cầu để service dùng key hệ thống"
+  },
+  {
+    "id": "TC_SUM_006",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Dịch vụ AI timeout",
+    "input": "userId='1001'; id='2001'; AI timeout",
+    "expected": "Hàm thất bại, không báo thành công"
+  },
+  {
+    "id": "TC_SUM_007",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Chuẩn hóa nodes không phải mảng",
+    "input": "userId='1001'; id='2001'; nodes=null",
+    "expected": "Không truyền dữ liệu sai kiểu đến AI"
+  },
+  {
+    "id": "TC_SUM_008",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/controller.spec.ts",
+    "function": "FlowController.summarizeCanvas",
+    "objective": "Chuẩn hóa edges không phải mảng",
+    "input": "userId='1001'; id='2001'; edges=null",
+    "expected": "Không truyền dữ liệu sai kiểu đến AI"
+  },
+  {
+    "id": "TC_SUM_009",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Nhận phản hồi OpenAI",
+    "input": "nodes=canvas workshop; edges=[]; provider='OPENAI'; key hợp lệ",
+    "expected": "Trả đầy đủ phản hồi và gửi đúng ngữ cảnh"
+  },
+  {
+    "id": "TC_SUM_010",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Nhận phản hồi Google",
+    "input": "nodes=canvas workshop; edges=[]; provider='GOOGLE'; key hợp lệ",
+    "expected": "Trả đầy đủ phản hồi Google"
+  },
+  {
+    "id": "TC_SUM_011",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Ưu tiên key cá nhân",
+    "input": "nodes=canvas workshop; edges=[]; có key cá nhân và hệ thống",
+    "expected": "Dùng key cá nhân"
+  },
+  {
+    "id": "TC_SUM_012",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Dùng key hệ thống",
+    "input": "nodes=canvas workshop; edges=[]; chỉ có key hệ thống",
+    "expected": "Dùng key hệ thống, trả phản hồi"
+  },
+  {
+    "id": "TC_SUM_013",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Thiếu toàn bộ key",
+    "input": "nodes=canvas workshop; edges=[]; không có key",
+    "expected": "Báo thiếu cấu hình API key"
+  },
+  {
+    "id": "TC_SUM_014",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "API key sai",
+    "input": "nodes=canvas workshop; edges=[]; API key sai",
+    "expected": "Ném lỗi xử lý AI, không trả câu trả lời thành công"
+  },
+  {
+    "id": "TC_SUM_015",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Provider timeout",
+    "input": "nodes=canvas workshop; edges=[]; Provider timeout",
+    "expected": "Ném lỗi xử lý AI, không trả câu trả lời thành công"
+  },
+  {
+    "id": "TC_SUM_016",
+    "feature": "tom-tat",
+    "file": "test/canvas-ai-unit/tom-tat/service.spec.ts",
+    "function": "CanvasAnalysisService.summarizeCanvas",
+    "objective": "Mất kết nối provider",
+    "input": "nodes=canvas workshop; edges=[]; Mất kết nối provider",
+    "expected": "Ném lỗi xử lý AI, không trả câu trả lời thành công"
+  },
+  {
+    "id": "TC_GEN_001",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Yêu cầu hợp lệ",
+    "input": "userId='1001'; description='Tạo template quản lý workshop'",
+    "expected": "Trả kết quả thành công đúng cấu trúc thiết kế"
+  },
+  {
+    "id": "TC_GEN_002",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Mô tả rỗng",
+    "input": "description=\"\"",
+    "expected": "Từ chối yêu cầu thiếu mô tả"
+  },
+  {
+    "id": "TC_GEN_003",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Mô tả null",
+    "input": "description=null",
+    "expected": "Từ chối yêu cầu thiếu mô tả"
+  },
+  {
+    "id": "TC_GEN_004",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Thiếu mô tả",
+    "input": "description=undefined",
+    "expected": "Từ chối yêu cầu thiếu mô tả"
+  },
+  {
+    "id": "TC_GEN_005",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Chọn key OpenAI",
+    "input": "description='Kế hoạch workshop'; chỉ có OpenAI key active",
+    "expected": "Chuyển đúng OpenAI key và provider"
+  },
+  {
+    "id": "TC_GEN_006",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Không có key cá nhân",
+    "input": "description='Kế hoạch workshop'; user keys không có",
+    "expected": "Chuyển yêu cầu để service sử dụng key hệ thống"
+  },
+  {
+    "id": "TC_GEN_007",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Truy vấn key thất bại",
+    "input": "description='Kế hoạch workshop'; truy vấn key lỗi",
+    "expected": "Yêu cầu thất bại, không gọi AI"
+  },
+  {
+    "id": "TC_GEN_008",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.controller.spec.ts",
+    "function": "FlowController.generateTemplate",
+    "objective": "Service AI thất bại",
+    "input": "description='Kế hoạch workshop'; AI timeout",
+    "expected": "Không trả kết quả thành công"
+  },
+  {
+    "id": "TC_GEN_009",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "Phản hồi hợp lệ",
+    "input": "description='Kế hoạch workshop'; provider='OPENAI'; key hợp lệ",
+    "expected": "Trả nodes và edges hợp lệ"
+  },
+  {
+    "id": "TC_GEN_010",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "Google thành công",
+    "input": "description='Kế hoạch workshop'; provider='GOOGLE'; key hợp lệ",
+    "expected": "Trả đúng dữ liệu từ Google"
+  },
+  {
+    "id": "TC_GEN_011",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "Thiếu API key",
+    "input": "description='Kế hoạch workshop'; không có key",
+    "expected": "Báo thiếu cấu hình key"
+  },
+  {
+    "id": "TC_GEN_012",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "Provider timeout",
+    "input": "description='Kế hoạch workshop'; provider timeout",
+    "expected": "Hàm thất bại, không trả dữ liệu thành công"
+  },
+  {
+    "id": "TC_GEN_013",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "JSON sai cú pháp",
+    "input": "description='Kế hoạch workshop'; phản hồi không phải JSON",
+    "expected": "Báo lỗi đọc dữ liệu AI"
+  },
+  {
+    "id": "TC_GEN_014",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "Thiếu edges",
+    "input": "description='Kế hoạch workshop'; phản hồi chỉ có nodes",
+    "expected": "Bổ sung edges=[]"
+  },
+  {
+    "id": "TC_GEN_015",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "Nodes sai kiểu",
+    "input": "description='Kế hoạch workshop'; nodes='invalid'",
+    "expected": "Báo lỗi validation, không trả template"
+  },
+  {
+    "id": "TC_GEN_016",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/template.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplate",
+    "objective": "ID node trùng",
+    "input": "description='Kế hoạch workshop'; hai node có id='N01'; edges=[]",
+    "expected": "Kết quả bảo đảm ID node duy nhất"
+  },
+  {
+    "id": "TC_GEN_017",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Yêu cầu hợp lệ",
+    "input": "userId='1001'; description='Tạo template quản lý workshop'",
+    "expected": "Trả kết quả thành công đúng cấu trúc thiết kế"
+  },
+  {
+    "id": "TC_GEN_018",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Mô tả rỗng",
+    "input": "description=\"\"",
+    "expected": "Từ chối yêu cầu thiếu mô tả"
+  },
+  {
+    "id": "TC_GEN_019",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Mô tả null",
+    "input": "description=null",
+    "expected": "Từ chối yêu cầu thiếu mô tả"
+  },
+  {
+    "id": "TC_GEN_020",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Thiếu mô tả",
+    "input": "description=undefined",
+    "expected": "Từ chối yêu cầu thiếu mô tả"
+  },
+  {
+    "id": "TC_GEN_021",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Chọn key OpenAI",
+    "input": "description='Kế hoạch workshop'; chỉ có OpenAI key active",
+    "expected": "Chuyển đúng OpenAI key và provider"
+  },
+  {
+    "id": "TC_GEN_022",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Không có key cá nhân",
+    "input": "description='Kế hoạch workshop'; user keys không có",
+    "expected": "Chuyển yêu cầu để service sử dụng key hệ thống"
+  },
+  {
+    "id": "TC_GEN_023",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Truy vấn key thất bại",
+    "input": "description='Kế hoạch workshop'; truy vấn key lỗi",
+    "expected": "Yêu cầu thất bại, không gọi AI"
+  },
+  {
+    "id": "TC_GEN_024",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.controller.spec.ts",
+    "function": "FlowController.generateTemplateSuggestions",
+    "objective": "Service AI thất bại",
+    "input": "description='Kế hoạch workshop'; AI timeout",
+    "expected": "Không trả kết quả thành công"
+  },
+  {
+    "id": "TC_GEN_025",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Phản hồi hợp lệ",
+    "input": "description='Kế hoạch workshop'; provider='OPENAI'; key hợp lệ",
+    "expected": "Trả danh sách gợi ý"
+  },
+  {
+    "id": "TC_GEN_026",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Google thành công",
+    "input": "description='Kế hoạch workshop'; provider='GOOGLE'; key hợp lệ",
+    "expected": "Trả đúng dữ liệu từ Google"
+  },
+  {
+    "id": "TC_GEN_027",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Thiếu API key",
+    "input": "description='Kế hoạch workshop'; không có key",
+    "expected": "Báo thiếu cấu hình key"
+  },
+  {
+    "id": "TC_GEN_028",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Provider timeout",
+    "input": "description='Kế hoạch workshop'; provider timeout",
+    "expected": "Hàm thất bại, không trả dữ liệu thành công"
+  },
+  {
+    "id": "TC_GEN_029",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "JSON sai cú pháp",
+    "input": "description='Kế hoạch workshop'; phản hồi không phải JSON",
+    "expected": "Báo lỗi đọc dữ liệu AI"
+  },
+  {
+    "id": "TC_GEN_030",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Danh sách 4 gợi ý",
+    "input": "description='Kế hoạch workshop'; phản hồi có 4 gợi ý",
+    "expected": "Trả đủ 4 gợi ý, giữ nguyên thứ tự"
+  },
+  {
+    "id": "TC_GEN_031",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Danh sách 5 gợi ý",
+    "input": "description='Kế hoạch workshop'; phản hồi có 5 gợi ý",
+    "expected": "Trả đủ 5 gợi ý, giữ nguyên thứ tự"
+  },
+  {
+    "id": "TC_GEN_032",
+    "feature": "genai",
+    "file": "test/canvas-ai-unit/genai/suggestions.service.spec.ts",
+    "function": "TemplateGeneratorService.generateTemplateSuggestions",
+    "objective": "Prompt yêu cầu số lượng gợi ý",
+    "input": "description='Kế hoạch workshop'",
+    "expected": "Yêu cầu AI tạo 3–5 phương án"
+  }
+]

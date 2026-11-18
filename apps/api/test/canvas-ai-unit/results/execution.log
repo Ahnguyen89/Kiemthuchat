@@ -1,0 +1,33 @@
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/hoi-dap/controller.spec.ts (7.499 s)
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/genai/suggestions.controller.spec.ts
+FAIL Kiemthuchat/apps/api/test/canvas-ai-unit/genai/template.service.spec.ts
+  ● TemplateGeneratorService.generateTemplate › TC_GEN_016 ID node trùng
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      135 |       'user-key'
+      136 |     );
+    > 137 |     expect(new Set(result.nodes.map((n) => n.id)).size).toBe(result.nodes.length);
+          |                                                         ^
+      138 |   });
+      139 | });
+      140 |
+
+      at Object.<anonymous> (test/canvas-ai-unit/genai/template.service.spec.ts:137:57)
+
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/tom-tat/controller.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/genai/template.controller.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/genai/suggestions.service.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/hoi-dap/service.spec.ts
+PASS Kiemthuchat/apps/api/test/canvas-ai-unit/tom-tat/service.spec.ts
+
+Test Suites: 1 failed, 7 passed, 8 total
+Tests:       1 failed, 63 passed, 64 total
+Snapshots:   0 total
+Time:        15.768 s
+Ran all test suites.
+Test results written to: Kiemthuchat\apps\api\test\canvas-ai-unit\results\jest-results.json
